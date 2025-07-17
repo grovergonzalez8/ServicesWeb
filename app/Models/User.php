@@ -55,4 +55,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Reporte::class, 'user_ci', 'ci');
     }
+
+    public function sessions()
+    {
+        return $this->hasMany(Session::class, 'user_id', 'ci');
+    }
 }
