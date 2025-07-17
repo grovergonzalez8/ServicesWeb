@@ -16,4 +16,18 @@ class InventoryEntryFactory extends Factory
             'observacion' => $this->faker->sentence(),
         ];
     }
+
+    public function forItem($item): static
+    {
+        return $this->state([
+            'item_codigo' => $item instanceof \App\Models\Item ? $item->codigo : $item,
+        ]);
+    }
+
+    public function byUser($user): static
+    {
+        return $this->state([
+            'user_ci' => $user instanceof \App\Models\User ? $user->ci : $user,
+        ]);
+    }
 }
