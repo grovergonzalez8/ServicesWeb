@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ItemSeeder::class);
         
         // 5. Crear movimientos de inventario
-        $this->call(InventorySeeder::class);
+        $this->call(InventoryOutputSeeder::class);
         
         // 6. Crear sellos y cartas
         $this->call(DocumentSeeder::class);
