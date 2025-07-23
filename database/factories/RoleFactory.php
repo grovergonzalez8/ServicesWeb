@@ -9,11 +9,11 @@ class RoleFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->unique()->word(),
+            'name' => $this->faker->unique()->jobTitle(),
             'description' => $this->faker->sentence(),
-            'can_make_entry' => $this->faker->boolean(),
-            'can_generate_seals' => $this->faker->boolean(),
-            'can_generate_letters' => $this->faker->boolean(),
+            'can_make_entry' => $this->faker->boolean(50),
+            'can_generate_seals' => $this->faker->boolean(30),
+            'can_generate_letters' => $this->faker->boolean(30),
         ];
     }
 
