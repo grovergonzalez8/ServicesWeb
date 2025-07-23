@@ -19,12 +19,14 @@ class ReporteSeeder extends Seeder
 
         foreach ($outputs as $output) {
             Reporte::create([
-                'user_id' => $output->user_id,
+                'user_ci' => $output->user_ci,             // Cambiar user_id por user_ci
                 'departamento_id' => $output->departamento_id,
-                'item_id' => $output->item_id,
-                'cantidad' => $output->cantidad,
-                'fecha' => $output->fecha_salida,
-                'observaciones' => 'Entrega registrada en reporte de prueba.',
+                'item_codigo' => $output->item_codigo,     // Cambiar item_id por item_codigo
+                'titulo' => 'Reporte de entrega',          // Agrega un título válido (obligatorio)
+                'contenido' => 'Entrega registrada en reporte de prueba.', // Agrega contenido (obligatorio)
+                'tipo' => 'inventario',                     // Opcional, según migración
+                'fecha' => $output->fecha,                  // Usa fecha correcta, en la migración está 'fecha'
+                'observacion' => null,                      // O algún texto, opcional
             ]);
         }
     }

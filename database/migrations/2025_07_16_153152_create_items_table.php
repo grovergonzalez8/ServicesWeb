@@ -10,9 +10,9 @@ return new class extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->string('codigo')->primary();
-            $table->string('nombre_item');
+            $table->string('nombre');
             $table->integer('stock')->default(0);
-            $table->string('unidad');
+            $table->string('unidad_medida');
             $table->timestamps();
         });
     }

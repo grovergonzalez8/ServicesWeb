@@ -10,13 +10,17 @@ class DocumentSeeder extends Seeder
 {
     public function run(): void
     {
+        $userCi = 12345678; // CI del admin creado en UserSeeder
+
         for ($i = 1; $i <= 5; $i++) {
             SealNumber::create([
-                'numero' => 'SN-00' . $i,
+                'numero_sello' => 'SN-00' . $i,
+                'user_ci' => $userCi,
             ]);
 
             LetterNumber::create([
-                'numero' => 'LN-00' . $i,
+                'numero_carta' => 'LN-00' . $i,
+                'user_ci' => $userCi,
             ]);
         }
     }
