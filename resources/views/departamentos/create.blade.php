@@ -1,31 +1,33 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-4">
-    <h1 class="text-2xl font-bold mb-4">Crear Departamento</h1>
+<div class="card">
+    <div class="card-header">
+        <h2>Crear Departamento</h2>
+    </div>
+    <div class="card-body">
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <strong>¡Ups!</strong> Hubo algunos problemas con tus datos.<br><br>
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-    @if ($errors->any())
-        <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>• {{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+        <form action="{{ route('departamentos.store') }}" method="POST">
+            @csrf
 
-    <form action="{{ route('departamentos.store') }}" method="POST" class="bg-white p-6 rounded shadow-md">
-        @csrf
-        <div class="mb-4">
-            <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre del Departamento</label>
-            <input type="text" name="nombre" id="nombre" value="{{ old('nombre') }}" required
-                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
-        </div>
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre del Departamento</label>
+                <input type="text" name="nombre" class="form-control" id="nombre" value="{{ old('nombre') }}" required>
+            </div>
 
-        <div class="flex justify-end">
-            <a href="{{ route('departamentos.index') }}" class="bg-gray-300 text-gray-800 px-4 py-2 rounded mr-2">Cancelar</a>
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Guardar</button>
-        </div>
-    </form>
+            <a href="{{ route('departamentos.index') }}" class="btn btn-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </form>
+    </div>
 </div>
 @endsection
