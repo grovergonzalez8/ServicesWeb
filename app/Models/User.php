@@ -12,12 +12,12 @@ class User extends Authenticatable
 
     protected $primaryKey = 'ci';
     public $incrementing = false;
-    protected $ketType = 'integer';
+    protected $keyType = 'integer';
 
     protected $fillable = [
         'ci',
         'nombre',
-        'pasword',
+        'password',
         'role_id'
     ];
 
@@ -25,6 +25,8 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    protected $with = ['role']; 
 
     public function role()
     {
