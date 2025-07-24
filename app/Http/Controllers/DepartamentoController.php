@@ -21,7 +21,7 @@ class DepartamentoController extends Controller
      */
     public function create()
     {
-        //
+        return view('departamentos.create');
     }
 
     /**
@@ -29,7 +29,15 @@ class DepartamentoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+        ]);
+
+        \App\Models\Departamento::create([
+            'nombre' => $request->nombre,
+        ]);
+
+        return redirect()->route('departamentos.index')->with('success', 'Departamento creado correctamente. ');
     }
 
     /**
