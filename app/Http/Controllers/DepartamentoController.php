@@ -51,17 +51,25 @@ class DepartamentoController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Departamento $departamento)
     {
-        //
+        return view('departamentos.edit', compact('departamento'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Departamento $departamento)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+        ]);
+
+        $departamento->update([
+            'nombre' => $request->nombre,
+        ]);
+
+        return redirect()->route('departamentos.index')->with('success', 'Departamento actualizado correctamente. ');
     }
 
     /**
