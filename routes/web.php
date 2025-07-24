@@ -10,8 +10,16 @@ Route::get('/users', function () {
     return User::all();
 });
 
+Route::get('/departamentos', function () {
+    return 'Aqui ira la vista de departamentos';
+});
+
 Route::get('/items', function () {
     return Item::all();
+});
+
+Route::get('/inventory-entries', function () {
+    return 'Aqui ira la vista de departamentos';
 });
 
 Route::get('/inventory-outputs', function () {
@@ -22,3 +30,15 @@ Route::get('/reportes', function () {
     $reportes = Reporte::with(['item', 'user', 'departamento'])->get();
     return view('reportes.index', compact('reportes'));
 });
+
+Route::get('/seal-numbers', function () {
+    return 'Aqui ira la vista de departamentos';
+});
+
+Route::get('/letter-numbers', function () {
+    return 'Aqui ira la vista de departamentos';
+});
+
+Route::get('/admin', function () {
+    return view('admin.dashboard');
+})->name('admin.dashboard');
