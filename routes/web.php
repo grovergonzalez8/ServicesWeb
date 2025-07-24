@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DepartamentoController;
 use App\Models\User;
 use App\Models\Item;
 use App\Models\InventoryOutput;
@@ -10,9 +11,7 @@ Route::get('/users', function () {
     return User::all();
 });
 
-Route::get('/departamentos', function () {
-    return 'Aqui ira la vista de departamentos';
-});
+Route::resource('departamentos', DepartamentoController::class);
 
 Route::get('/items', function () {
     return Item::all();
