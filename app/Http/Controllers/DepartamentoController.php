@@ -75,8 +75,10 @@ class DepartamentoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Departamento $departamento)
     {
-        //
+        $departamento->delete();
+
+        return redirect()->route('departamentos.index')->with('success', 'Departamento eliminado correctamente. ');
     }
 }

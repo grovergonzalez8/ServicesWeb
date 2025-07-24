@@ -21,7 +21,7 @@ class ItemController extends Controller
      */
     public function create()
     {
-        //
+        return view('items.create');
     }
 
     /**
@@ -29,7 +29,16 @@ class ItemController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'codigo' => 'required|string|unique:items,codigo',
+            'nombre' => 'required|string',
+            'stock' => 'required|integer|min:0',
+            'unidad_medida' => 'required|string',
+        ]);
+
+        Item::create($request->all());
+
+        return redirect()->route('items.index')->with('success', 'Item creado correctamente.');
     }
 
     /**
@@ -43,24 +52,39 @@ class ItemController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Item $item)
     {
-        //
+        return view('items.edit', compact('item'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Item $item)
     {
-        //
+        $request->validate([
+            'codigo' => 'required|string|unique:items,codigo,' . $item->codigo . ',codigo',
+            'nombre' => 'required|string',
+            'stock' => 'required|integer|min:0',
+            'unidad_medida' => 'required|string',
+        ]);
+
+        $item->update([
+            'nombre' => $request->nombre,
+            'stock' => $request->stock,
+            'unidad_medida' => $request->unidad_medida,
+        ]);
+
+        return redirect()->route('items.index')->with('success', 'Item actualizado correctamente.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Item $item)
     {
-        //
+        $item->delete();
+
+        return redirect()->route('items.index')->with('success', 'Item eliminado correctamente.');
     }
 }
