@@ -22,12 +22,14 @@
             <input type="password" name="password" class="form-control" required>
         </div>
 
-        <div class="mb-3">
-            <label for="role_id" class="form-label">Rol</label>
-            <select name="role_id" class="form-control" required>
+        <div class="mb-4">
+            <label for="role_id" class="block text-gray-700 font-bold mb-2">Rol:</label>
+            <select name="role_id" id="role_id" class="w-full border border-gray-300 rounded px-3 py-2">
                 <option value="">Seleccione un rol</option>
-                @foreach ($roles as $role)
-                    <option value="{{ $role->id }}">{{ $role->nombre }}</option>
+                @foreach($roles as $role)
+                    <option value="{{ $role->id }}" {{ (old('role_id', $user->role_id ?? '') == $role->id) ? 'selected' : '' }}>
+                        {{ $role->name }}
+                    </option>
                 @endforeach
             </select>
         </div>

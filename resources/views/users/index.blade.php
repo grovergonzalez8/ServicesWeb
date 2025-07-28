@@ -18,7 +18,7 @@
                 <tr>
                     <td>{{ $user->ci }}</td>
                     <td>{{ $user->nombre }}</td>
-                    <td>{{ $user->role->nombre ?? 'Sin rol' }}</td>
+                    <td>{{ $user->role->name ?? 'Sin Rol' }}</td>
                     <td>
                         <a href="{{ route('users.edit', $user->ci) }}" class="btn btn-primary btn-sm">Editar</a>
                         <form action="{{ route('users.destroy', $user->ci) }}" method="POST" style="display:inline;">
