@@ -11,7 +11,7 @@ class InventoryEntry extends Model
 
     protected $fillable = [
         'item_codigo',
-        'cantida',
+        'cantidad',
         'user_ci',
         'fecha',
         'observacion'

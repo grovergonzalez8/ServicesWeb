@@ -3,6 +3,7 @@
 use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\InventoryEntryController;
 use App\Models\InventoryOutput;
 use App\Models\Reporte;
 use Illuminate\Support\Facades\Route;
@@ -13,9 +14,7 @@ Route::resource('departamentos', DepartamentoController::class);
 
 Route::resource('items', ItemController::class);
 
-Route::get('/inventory-entries', function () {
-    return 'Aqui ira la vista de departamentos';
-});
+Route::resource('inventory-entries', InventoryEntryController::class)->except(['show', 'edit', 'update', 'destroy']);
 
 Route::get('/inventory-outputs', function () {
     return InventoryOutput::with(['user', 'item', 'departamento'])->get();
