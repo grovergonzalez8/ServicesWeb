@@ -4,7 +4,7 @@ use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\InventoryEntryController;
-use App\Models\InventoryOutput;
+use App\Http\Controllers\InventoryOutputController;
 use App\Models\Reporte;
 use Illuminate\Support\Facades\Route;
 
@@ -16,9 +16,7 @@ Route::resource('items', ItemController::class);
 
 Route::resource('inventory-entries', InventoryEntryController::class)->except(['show', 'edit', 'update', 'destroy']);
 
-Route::get('/inventory-outputs', function () {
-    return InventoryOutput::with(['user', 'item', 'departamento'])->get();
-});
+Route::resource('inventory-outputs', InventoryOutputController::class);
 
 Route::get('/reportes', function () {
     $reportes = Reporte::with(['item', 'user', 'departamento'])->get();
