@@ -24,7 +24,7 @@ class InventoryEntryController extends Controller
     public function create()
     {
         $items = Item::all();
-        return view('inventory-entires.create', compact('items'));
+        return view('inventory-entries.create', compact('items'));
     }
 
     /**
