@@ -42,6 +42,17 @@
             </select>
         </div>
 
+        <div class="mb-4">
+            <label for="departamento_id">Departamento destino</label>
+            <select name="departamento_id" id="departamento_id" class="form-control" required>
+                @foreach($departamentos as $departamento)
+                    <option value="{{ $departamento->id }}" {{ $departamento->id == $output->departamento_id ? 'selected' : '' }}>
+                        {{ $departamento->nombre }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
         <div class="mb-3">
             <label for="cantidad" class="form-label">Cantidad</label>
             <input type="number" name="cantidad" id="cantidad" class="form-control" min="1" value="{{ old('cantidad', $output->cantidad) }}" required>

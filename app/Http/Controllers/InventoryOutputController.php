@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Departamento;
 use Illuminate\Http\Request;
 use App\Models\InventoryOutput;
 use App\Models\Item;
@@ -15,7 +16,7 @@ class InventoryOutputController extends Controller
      */
     public function index()
     {
-        $outputs = InventoryOutput::with('item', 'user')->latest()->get();
+        $outputs = InventoryOutput::with(['item', 'user', 'departamento'])->get();
         return view('inventory-outputs.index', compact('outputs'));
     }
 
@@ -26,7 +27,8 @@ class InventoryOutputController extends Controller
     {
         $items = Item::all();
         $users = User::all();
-        return view('inventory-outputs.create', compact('items', 'users'));
+        $departamentos = Departamento::all();
+        return view('inventory-outputs.create', compact('items', 'users', 'departamentos'));
     }
 
     /**
@@ -39,20 +41,21 @@ class InventoryOutputController extends Controller
             'cantidad' => 'required|integer|min:1',
             'observacion' => 'nullable|string|max:1000',
             'user_ci' => 'required|exists:users,ci',
+            'departamento_id' => 'required|exists:departamentos,id',
         ]);
 
         $userCi = $request->user_ci;
-
         $item = Item::where('codigo', $request->item_codigo)->first();
         
         if ($request->cantidad > $item->stock) {
-            return back()->withErrors(['cantidad' => 'No hay suficiente stock disponible.']);
+            return back()->withErrors(['cantidad' => 'No hay suficiente stock disponible.'])->withInput();
         }
 
         InventoryOutput::create([
             'item_codigo' => $request->item_codigo,
             'cantidad' => $request->cantidad,
             'user_ci' => $userCi,
+            'departamento_id' => $request->departamento_id,
             'fecha' => Carbon::now(),
             'observacion' => $request->observacion,
         ]);
@@ -74,45 +77,35 @@ class InventoryOutputController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(InventoryOutput $inventoryOutput)
     {
-        $output = InventoryOutput::findOrFail($id);
+        $output = $inventoryOutput;
+        $departamentos = Departamento::all();
         $items = Item::all();
         $users = User::all();
-        return view('inventory-outputs.edit', compact('output', 'items', 'users'));
+        return view('inventory-outputs.edit', compact('output', 'departamentos', 'items', 'users'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, InventoryOutput $inventoryOutput)
     {
-        $output = InventoryOutput::findOrFail($id);
-
         $request->validate([
             'item_codigo' => 'required|exists:items,codigo',
             'cantidad' => 'required|integer|min:1',
             'observacion' => 'nullable|string|max:1000',
+            'user_ci' => 'required|exists:users,ci',
+            'departamento_id' => 'required|exists:departamentos,id',
         ]);
 
-        $item = Item::where('codigo', $output->item_codigo)->first();
-
-        $item->stock += $output->cantidad;
-
-        $nuevoItem = Item::where('codigo', $request->item_codigo)->first();
-        if ($request->cantidad > $nuevoItem->stock) {
-            return back()->withErrors(['cantidad' => 'No hay suficiente stock para el nuevo valor.']);
-        }
-
-        $output->update([
+        $inventoryOutput->update([
             'item_codigo' => $request->item_codigo,
             'cantidad' => $request->cantidad,
+            'user_ci' => $request->user_ci,
+            'departamento_id' => $request->departamento_id,
             'observacion' => $request->observacion,
         ]);
-
-        $nuevoItem->stock -= $request->cantidad;
-        $item->save();
-        $nuevoItem->save();
 
         return redirect()->route('inventory-outputs.index')->with('success', 'Salida actualizada correctamente.');
     }
