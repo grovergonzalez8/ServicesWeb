@@ -9,7 +9,7 @@ class SealNumberFactory extends Factory
     public function definition(): array
     {
         return [
-            'numero_sello' => $this->faker->unique()->bothify('SEAL-####-????'),
+            'numero_sello' => $this->faker->unique()->numberBetween(1303875, 9999999),
             'user_ci' => \App\Models\User::factory(),
             'observacion' => $this->faker->sentence(),
         ];

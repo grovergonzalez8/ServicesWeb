@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('seal_numbers', function (Blueprint $table) {
             $table->id();
-            $table->string('numero_sello')->unique();
+            $table->bigInteger('numero_sello')->unique();
             $table->integer('user_ci');
             $table->foreign('user_ci')->references('ci')->on('users');
             $table->timestamp('fecha')->useCurrent();
