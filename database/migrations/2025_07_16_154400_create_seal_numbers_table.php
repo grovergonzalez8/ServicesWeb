@@ -13,6 +13,7 @@ return new class extends Migration
             $table->bigInteger('numero_sello')->unique();
             $table->integer('user_ci');
             $table->foreign('user_ci')->references('ci')->on('users');
+            $table->string('estado')->default('disponible');
             $table->timestamp('fecha')->useCurrent();
             $table->text('observacion')->nullable();
             $table->timestamps();
