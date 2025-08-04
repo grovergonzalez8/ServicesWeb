@@ -21,9 +21,18 @@ Route::resource('inventory-outputs', InventoryOutputController::class);
 
 Route::get('/reportes', [ReporteController::class, 'index'])->name('reportes.index');
 
-Route::get('/seal-numbers', [SealNumberController::class, 'index'])->name('seal-numbers.index');
-Route::post('/seal-numbers/generate', [SealNumberController::class, 'generate'])->name('seal-numbers.generate');
-Route::post('/seal-numbers/reserve/{id}', [SealNumberController::class, 'reserve'])->name('seal-numbers.reserve');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/seal-numbers', [SealNumberController::class, 'index'])
+        ->name('seal-numbers.index');
+    
+    Route::post('/seal-numbers/reserve/{id}', [SealNumberController::class, 'reserve'])
+        ->name('seal-numbers.reserve');
+
+    Route::middleware(['admin'])->group(function () {
+        Route::post('/seal-numbers/generate', [SealNumberController::class, 'generate'])
+            ->name('seal-numbers.generate');
+    });
+});
 
 Route::get('/letter-numbers', function () {
     return 'Aqui ira la vista de departamentos';

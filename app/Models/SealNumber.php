@@ -12,6 +12,7 @@ class SealNumber extends Model
     protected $fillable = [
         'numero_sello',
         'user_ci',
+        'estado',
         'observacion'
     ];
 
@@ -20,6 +21,11 @@ class SealNumber extends Model
     ];
 
     public function user()
+    {
+        return $this->belongsTo(User::class, 'user_ci', 'ci');
+    }
+
+    public function generador()
     {
         return $this->belongsTo(User::class, 'user_ci', 'ci');
     }

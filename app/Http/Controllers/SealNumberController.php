@@ -15,87 +15,60 @@ class SealNumberController extends Controller
      */
     public function index()
     {
-        $sellos = SealNumber::with('user')->orderByDesc('number_sellos')->paginate(15);
-        return view('seal-numbers.index', compact('sellos'));
-    }
+        $sellos = SealNumber::with('user')
+                    ->orderByDesc('number_sellos')      
+                    ->paginate(15);
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return view('seal-numbers.index', [
+            'sellos' => $sellos,
+            'isAdmin' => Auth::check() && Auth::user()->role == 'admin'
+        ]);
     }
 
     public function generate(Request $request)
     {
-        $ultimoSello = SealNumber::max('numero_sello');
-        $nuevoNumero = $ultimoSello ? $ultimoSello + 1 : 1303875;
-        
-        SealNumber::create([
-            'numero_sello' => $nuevoNumero,
-            'user_ci' => null,
-            'observacion' => 'Sello generado automáticamente'
-        ]);
+       if (Auth::user()->role !== 'admin') {
+            return redirect()->route('seal-numbers.index')
+                ->with('error', 'Acceso no autorizado');
+        }
 
-        return redirect()->route('seal-numbers.index')->with('success', 'Sello generado!');
+        DB::transaction(function () {
+            $ultimoSello = SealNumber::lockForUpdate()->max('numero_sello');
+            $nuevoNumero = $ultimoSello ? $ultimoSello + 1 : 1303875;
+            
+            SealNumber::create([
+                'numero_sello' => $nuevoNumero,
+                'user_ci' => Auth::user()->ci, 
+                'estado' => 'disponible',
+                'observacion' => 'Sello generado por ' . Auth::user()->name
+            ]);
+        });
+
+        return redirect()->route('seal-numbers.index')
+            ->with('success', 'Sello generado exitosamente');
     }
 
     public function reserve(Request $request, $id)
     {
-        $sello = SealNumber::findOrFail($id);
-        
-        if ($sello->user_ci) {
-            return back()->with('error', 'Este sello ya está reservado');
+        try {
+            DB::transaction(function () use ($id, $request) {
+                $sello = SealNumber::lockForUpdate()->findOrFail($id);
+                
+                if ($sello->estado !== 'disponible') {
+                    throw new \Exception('Este sello ya está reservado');
+                }
+                
+                $sello->update([
+                    'user_ci' => Auth::user()->ci, 
+                    'estado' => 'reservado',
+                    'observacion' => $request->observacion ?? 'Reservado por ' . Auth::user()->name
+                ]);
+            });
+            
+            return redirect()->route('seal-numbers.index')
+                ->with('success', 'Sello reservado exitosamente');
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
         }
-
-        DB::transaction(function () use ($sello) {
-            $sello->update([
-                'user_ci' => Auth::user()->ci,
-                'observacion' => $request->observacion ?? 'Reservado por ' . Auth::user()->name
-            ]);
-        });
-
-        return redirect()->route('seal-numbers.index')->with('success', 'Sello reservado!');
     }
 }
